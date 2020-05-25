@@ -7,7 +7,7 @@ pipeline {
 		stage('Etapa 0') {
 			steps {
 				echo "Proyecto ${PROJECT_NAME}"
-				echo "TimeStamp: ${Util.getTimeSpanString(System.currentTimeMillis())}"
+				echo "TimeStamp: ${currentBuild.startTimeInMillis}"
 			}
 		}
         stage('Etapa 1 - Validation') {
