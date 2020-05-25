@@ -49,15 +49,15 @@ pipeline {
             steps {
                 script{
                     def JAR = findFiles(glob: '**/target/*.jar')
-                    bat("del /q C:\\Laboratorio Win7\\jenkins_route\\Prod\\*")
-                    bat("move /Y ${WORKSPACE}\\${JAR[0].path} C:\\Laboratorio Win7\\jenkins_route\\Prod")
-                    bat("xcopy print_compiler.txt C:\\Laboratorio Win7\\jenkins_route\\Prod /Y")
+                    bat("del /q C:jenkins_route\\Prod\\*")
+                    bat("move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod")
+                    bat("xcopy print_compiler.txt C:\\jenkins_route\\Prod /Y")
                   }
             }
         }
         stage('Etapa 7 - Distribution Preproduction') {
             steps {
-                bat("xcopy ${WORKSPACE} C:\\Laboratorio Win7\\jenkins_route\\PreProd /E /S /H /Y")
+                bat("xcopy ${WORKSPACE} C:\\jenkins_route\\PreProd /E /S /H /Y")
                 
             }
         }
