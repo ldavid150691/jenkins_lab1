@@ -3,11 +3,17 @@ pipeline {
     environment {
 		PROJECT_NAME='INTEGRATION TEST JENKINS'
     }
+	script {
+		DATE_TAG = java.time.LocalDate.now()
+		DATETIME_TAG = java.time.LocalDateTime.now()
+	}
     stages {
 		stage('Etapa 0') {
 			steps {
 				echo "Proyecto ${PROJECT_NAME}"
 				echo "TimeStamp: ${currentBuild.startTimeInMillis}"
+				echo "${DATE_TAG}"
+				echo "${DATETIME_TAG}"
 			}
 		}
         stage('Etapa 1 - Validation') {
