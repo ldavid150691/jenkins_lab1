@@ -1,0 +1,105 @@
+pipeline {
+	agent any
+    environment {
+		PROJECT_NAME='KAOS - SOFTWARE PROJECT'
+    }
+    stages {
+		stage('Etapa 0') {
+			steps {
+				echo "Proyecto ${PROJECT_NAME}"
+			}
+		}
+        stage('Etapa 1 - Validation') {
+            steps {
+                bat "mvn -version"
+                bat "mvn validate"
+            }
+        }
+		stage('Etapa 2 - Compile') {
+            steps {
+                script{
+                    def COMPILE = bat (script:"mvn compile", returnStdout: true)
+                    emailext (
+                        subject: "Project compiled ${PROJECT_NAME}",
+                        body: "${COMPILE}",
+                        to: "camilohz9315@gmail.com",
+                        from: "camilohz9315@gmail.com"
+                    )
+                }
+            }
+        }
+        stage('Etapa 3 - Test') {
+            steps {
+                script{
+                    def TEST = bat (script:"mvn test", returnStdout: true)
+                    emailext (
+                        subject: "Test results ${PROJECT_NAME}",
+                        body: "${TEST}",
+                        to: "camilohz9315@gmail.com",
+                        from: "camilohz9315@gmail.com"
+                    )
+                }
+            }
+        }
+        stage('Etapa 4 - Package') {
+            steps {
+                bat "mvn package"
+            }
+        }
+        stage('Etapa 5 - Key') {
+            steps {
+                script{
+                    def JAR = findFiles(glob: '**/target/*.jar')
+                    bat "certutil -hashfile ${JAR[0].path} SHA256 | findstr /v hash > huella_mvn.txt"
+                }
+                
+            }
+        }
+        stage('Etapa 6 - Distribution Production') {
+            steps {
+                script{
+                    def JAR = findFiles(glob: '**/target/*.jar')
+                    bat("del /q F:\\Production\\*")
+                    bat("move /Y ${WORKSPACE}\\${JAR[0].path} F:\\Production")
+                    bat("xcopy huella_mvn.txt F:\\Production /Y")
+                    emailext (
+                        subject: "${PROJECT_NAME} brand new version avaible",
+                        body: "We have a new version of our software for you",
+                        to: "camilohz9315@gmail.com",
+                        from: "camilohz9315@gmail.com"
+                    )
+                }
+            }
+        }
+        stage('Etapa 7 - Distribution Preproduction') {
+            steps {
+                bat("xcopy ${WORKSPACE} F:\\Preproduction /E /S /H /Y")
+                emailext (
+                    subject: "Preproduction upload ${PROJECT_NAME}",
+                    body: "Check preproduction ambient, new versión uploaded",
+                    to: "camilohz1593@gmail.com",
+                    from: "camilohz9315@gmail.com"
+                )
+            }
+        }
+    }
+	post {
+		always {
+            echo "Finalizo: ${currentBuild.currentResult}"
+        }
+        aborted {
+            echo "BUILD ABORTED"
+        }
+        success {
+            echo "BUILD SUCCESS"
+            echo "Seria bueno mantener esta construccion"
+        }
+        unstable {
+            echo "BUILD UNSTABLE"
+        }
+        failure {
+            echo "BUILD FAILURE"
+			echo "Revisar Fallos"
+        }
+	}
+}
