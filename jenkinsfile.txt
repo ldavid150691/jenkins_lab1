@@ -18,26 +18,16 @@ pipeline {
 		stage('Etapa 2 - Compile') {
             steps {
                 script{
-                    def COMPILE = bat (script:"mvn compile", returnStdout: true)
-                    emailext (
-                        subject: "Project compiled ${PROJECT_NAME}",
-                        body: "${COMPILE}",
-                        to: "camilohz9315@gmail.com",
-                        from: "camilohz9315@gmail.com"
-                    )
+                    echo bat (script:"mvn compile", returnStdout: true)
+                    
                 }
             }
         }
         stage('Etapa 3 - Test') {
             steps {
                 script{
-                    def TEST = bat (script:"mvn test", returnStdout: true)
-                    emailext (
-                        subject: "Test results ${PROJECT_NAME}",
-                        body: "${TEST}",
-                        to: "camilohz9315@gmail.com",
-                        from: "camilohz9315@gmail.com"
-                    )
+                    echo = bat (script:"mvn test", returnStdout: true)
+                    
                 }
             }
         }
@@ -50,7 +40,7 @@ pipeline {
             steps {
                 script{
                     def JAR = findFiles(glob: '**/target/*.jar')
-                    bat "certutil -hashfile ${JAR[0].path} SHA256 | findstr /v hash > huella_mvn.txt"
+                    bat "certutil -hashfile ${JAR[0].path} SHA256 | findstr /v hash > print_compiler.txt"
                 }
                 
             }
@@ -59,27 +49,16 @@ pipeline {
             steps {
                 script{
                     def JAR = findFiles(glob: '**/target/*.jar')
-                    bat("del /q F:\\Production\\*")
-                    bat("move /Y ${WORKSPACE}\\${JAR[0].path} F:\\Production")
-                    bat("xcopy huella_mvn.txt F:\\Production /Y")
-                    emailext (
-                        subject: "${PROJECT_NAME} brand new version avaible",
-                        body: "We have a new version of our software for you",
-                        to: "camilohz9315@gmail.com",
-                        from: "camilohz9315@gmail.com"
-                    )
-                }
+                    bat("del /q C:\\Laboratorio Win7\\jenkins_route\\Prod\\*")
+                    bat("move /Y ${WORKSPACE}\\${JAR[0].path} C:\\Laboratorio Win7\\jenkins_route\\Prod")
+                    bat("xcopy print_compiler.txt C:\\Laboratorio Win7\\jenkins_route\\Prod /Y")
+                  }
             }
         }
         stage('Etapa 7 - Distribution Preproduction') {
             steps {
-                bat("xcopy ${WORKSPACE} F:\\Preproduction /E /S /H /Y")
-                emailext (
-                    subject: "Preproduction upload ${PROJECT_NAME}",
-                    body: "Check preproduction ambient, new versión uploaded",
-                    to: "camilohz1593@gmail.com",
-                    from: "camilohz9315@gmail.com"
-                )
+                bat("xcopy ${WORKSPACE} C:\\Laboratorio Win7\\jenkins_route\\PreProd /E /S /H /Y")
+                
             }
         }
     }
