@@ -1,12 +1,13 @@
 pipeline {
 	agent any
     environment {
-		PROJECT_NAME='KAOS - SOFTWARE PROJECT'
+		PROJECT_NAME='INTEGRATION TEST JENKINS'
     }
     stages {
 		stage('Etapa 0') {
 			steps {
 				echo "Proyecto ${PROJECT_NAME}"
+				echo "TimeStamp: ${Util.getTimeSpanString(System.currentTimeMillis())}"
 			}
 		}
         stage('Etapa 1 - Validation') {
