@@ -62,6 +62,7 @@ pipeline {
         stage('Etapa 7 - Distribution Preproduction') {
             steps {
                 bat("xcopy ${WORKSPACE} C:\\jenkins_route\\PreProd\\${currentBuild.startTimeInMillis} /E /S /H /Y")
+				bat("D")
             }
         }
     }
