@@ -14,7 +14,7 @@ pipeline {
             steps {
 	    	echo "***Version MAVEN"	
                 bat "mvn -version"
-		echo "***Valida MAVEN"	
+		echo "***Validacion MAVEN"	
                 bat "mvn validate"
             }
         }
