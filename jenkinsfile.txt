@@ -49,9 +49,12 @@ pipeline {
             steps {
                 script{
                     def JAR = findFiles(glob: '**/target/*.jar')
-                    bat("del /q C:\\jenkins_route\\Prod\\*")
-                    bat("move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod")
-                    bat("xcopy print_compiler.txt C:\\jenkins_route\\Prod /Y")
+                    /*  bat("del /q C:\\jenkins_route\\Prod\\*") borrar contenido de carpeta
+					 bat("move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod")					
+					*/
+					bat("mkdir C:\\jenkins_route\\Prod\\compilado1 & move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod\\compilado1")
+				   
+                    bat("xcopy print_compiler.txt C:\\jenkins_route\\Prod\\compilado1 /Y")
                   }
             }
         }
