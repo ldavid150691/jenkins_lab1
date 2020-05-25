@@ -2,18 +2,13 @@ pipeline {
 	agent any
     environment {
 		PROJECT_NAME='INTEGRATION TEST JENKINS'
+		PROJECT_TIME_SNAPSHOT=${currentBuild.startTimeInMillis}
     }
-	script {
-		DATE_TAG = java.time.LocalDate.now()
-		DATETIME_TAG = java.time.LocalDateTime.now()
-	}
     stages {
 		stage('Etapa 0') {
 			steps {
 				echo "Proyecto ${PROJECT_NAME}"
-				echo "TimeStamp: ${currentBuild.startTimeInMillis}"
-				echo "${DATE_TAG}"
-				echo "${DATETIME_TAG}"
+				echo "${PROJECT_TIME_SNAPSHOT}"
 			}
 		}
         stage('Etapa 1 - Validation') {
