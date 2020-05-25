@@ -2,13 +2,12 @@ pipeline {
 	agent any
     environment {
 		PROJECT_NAME='INTEGRATION TEST JENKINS'
-		PROJECT_TIME_SNAPSHOT=${currentBuild.startTimeInMillis}
     }
     stages {
 		stage('Etapa 0') {
 			steps {
 				echo "Proyecto ${PROJECT_NAME}"
-				echo "${PROJECT_TIME_SNAPSHOT}"
+				echo "Folder name for release: ${currentBuild.startTimeInMillis}"
 			}
 		}
         stage('Etapa 1 - Validation') {
@@ -54,16 +53,15 @@ pipeline {
                     /*  bat("del /q C:\\jenkins_route\\Prod\\*") borrar contenido de carpeta
 					 bat("move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod")					
 					*/
-					bat("mkdir C:\\jenkins_route\\Prod\\compilado1 & move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod\\compilado1")
-				   
-                    bat("xcopy print_compiler.txt C:\\jenkins_route\\Prod\\compilado1 /Y")
+					bat("mkdir C:\\jenkins_route\\Prod\\${currentBuild.startTimeInMillis} & move /Y ${WORKSPACE}\\${JAR[0].path} C:\\jenkins_route\\Prod\\${currentBuild.startTimeInMillis}")
+			   
+                    bat("xcopy print_compiler.txt C:\\jenkins_route\\Prod\\${currentBuild.startTimeInMillis} /Y")
                   }
             }
         }
         stage('Etapa 7 - Distribution Preproduction') {
             steps {
-                bat("xcopy ${WORKSPACE} C:\\jenkins_route\\PreProd /E /S /H /Y")
-                
+                bat("xcopy ${WORKSPACE} C:\\jenkins_route\\PreProd\\${currentBuild.startTimeInMillis} /E /S /H /Y")
             }
         }
     }
